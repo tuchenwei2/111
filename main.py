@@ -8,7 +8,7 @@ import os
 
 
 def get_color():
-    # 获取随机颜色
+    # 鑾峰彇闅忔満棰滆壊
     get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFFFFF), range(n)))
     color_list = get_colors(100)
     return random.choice(color_list)
@@ -24,7 +24,7 @@ def get_access_token():
     try:
         access_token = get(post_url).json()['access_token']
     except KeyError:
-        print("获取access_token失败，请检查app_id和app_secret是否正确")
+        print("鑾峰彇access_token澶辫触锛岃妫?鏌pp_id鍜宎pp_secret鏄惁姝ｇ‘")
         os.system("pause")
         sys.exit(1)
     # print(access_token)
@@ -40,44 +40,44 @@ def get_weather(region):
     region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
     response = get(region_url, headers=headers).json()
     if response["code"] == "404":
-        print("推送消息失败，请检查地区名是否有误！")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ュ湴鍖哄悕鏄惁鏈夎锛?")
         os.system("pause")
         sys.exit(1)
     elif response["code"] == "401":
-        print("推送消息失败，请检查和风天气key是否正确！")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ュ拰椋庡ぉ姘攌ey鏄惁姝ｇ‘锛?")
         os.system("pause")
         sys.exit(1)
     else:
-        # 获取地区的location--id
+        # 鑾峰彇鍦板尯鐨刲ocation--id
         location_id = response["location"][0]["id"]
     weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
     response = get(weather_url, headers=headers).json()
-    # 天气
+    # 澶╂皵
     weather = response["now"]["text"]
-    # 当前温度
+    # 褰撳墠娓╁害
     temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
-    # 风向
+    # 椋庡悜
     wind_dir = response["now"]["windDir"]
-    # 获取逐日天气预报
+    # 鑾峰彇閫愭棩澶╂皵棰勬姤
     url = "https://devapi.qweather.com/v7/weather/3d?location={}&key={}".format(location_id, key)
     response = get(url, headers=headers).json()
-    # 最高气温
+    # 鏈?楂樻皵娓?
     max_temp = response["daily"][0]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
-    # 最低气温
+    # 鏈?浣庢皵娓?
     min_temp = response["daily"][0]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
-    # 日出时间
+    # 鏃ュ嚭鏃堕棿
     sunrise = response["daily"][0]["sunrise"]
-    # 日落时间
+    # 鏃ヨ惤鏃堕棿
     sunset = response["daily"][0]["sunset"]
     url = "https://devapi.qweather.com/v7/air/now?location={}&key={}".format(location_id, key)
     response = get(url, headers=headers).json()
     if response["code"] == "200":
-        # 空气质量
+        # 绌烘皵璐ㄩ噺
         category = response["now"]["category"]
         # pm2.5
         pm2p5 = response["now"]["pm2p5"]
     else:
-        # 国外城市获取不到数据
+        # 鍥藉鍩庡競鑾峰彇涓嶅埌鏁版嵁
         category = ""
         pm2p5 = ""
     id = random.randint(1, 16)
@@ -111,28 +111,28 @@ def get_tianhang():
 
 def get_birthday(birthday, year, today):
     birthday_year = birthday.split("-")[0]
-    # 判断是否为农历生日
+    # 鍒ゆ柇鏄惁涓哄啘鍘嗙敓鏃?
     if birthday_year[0] == "r":
         r_mouth = int(birthday.split("-")[1])
         r_day = int(birthday.split("-")[2])
-        # 获取农历生日的生日
+        # 鑾峰彇鍐滃巻鐢熸棩鐨勭敓鏃?
         try:
             year_date = ZhDate(year, r_mouth, r_day).to_datetime().date()
         except TypeError:
-            print("请检查生日的日子是否在今年存在")
+            print("璇锋鏌ョ敓鏃ョ殑鏃ュ瓙鏄惁鍦ㄤ粖骞村瓨鍦?")
             os.system("pause")
             sys.exit(1)
 
     else:
-        # 获取国历生日的今年对应月和日
+        # 鑾峰彇鍥藉巻鐢熸棩鐨勪粖骞村搴旀湀鍜屾棩
         birthday_month = int(birthday.split("-")[1])
         birthday_day = int(birthday.split("-")[2])
-        # 今年生日
+        # 浠婂勾鐢熸棩
         year_date = date(year, birthday_month, birthday_day)
-    # 计算生日年份，如果还没过，按当年减，如果过了需要+1
+    # 璁＄畻鐢熸棩骞翠唤锛屽鏋滆繕娌¤繃锛屾寜褰撳勾鍑忥紝濡傛灉杩囦簡闇?瑕?+1
     if today > year_date:
         if birthday_year[0] == "r":
-            # 获取农历明年生日的月和日
+            # 鑾峰彇鍐滃巻鏄庡勾鐢熸棩鐨勬湀鍜屾棩
             r_last_birthday = ZhDate((year + 1), r_mouth, r_day).to_datetime().date()
             birth_date = date((year + 1), r_last_birthday.month, r_last_birthday.day)
         else:
@@ -162,20 +162,20 @@ def get_ciba():
 def send_message(to_user, access_token, region_name, weather, temp, wind_dir, note_ch, note_en, max_temp, min_temp,
                  sunrise, sunset, category, pm2p5, proposal, chp):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
-    week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+    week_list = ["鏄熸湡鏃?", "鏄熸湡涓?", "鏄熸湡浜?", "鏄熸湡涓?", "鏄熸湡鍥?", "鏄熸湡浜?", "鏄熸湡鍏?"]
     year = localtime().tm_year
     month = localtime().tm_mon
     day = localtime().tm_mday
     today = datetime.date(datetime(year=year, month=month, day=day))
     week = week_list[today.isoweekday() % 7]
-    # 获取在一起的日子的日期格式
+    # 鑾峰彇鍦ㄤ竴璧风殑鏃ュ瓙鐨勬棩鏈熸牸寮?
     love_year = int(config["love_date"].split("-")[0])
     love_month = int(config["love_date"].split("-")[1])
     love_day = int(config["love_date"].split("-")[2])
     love_date = date(love_year, love_month, love_day)
-    # 获取在一起的日期差
+    # 鑾峰彇鍦ㄤ竴璧风殑鏃ユ湡宸?
     love_days = str(today.__sub__(love_date)).split(" ")[0]
-    # 获取所有生日数据
+    # 鑾峰彇鎵?鏈夌敓鏃ユ暟鎹?
     birthdays = {}
     for k, v in config.items():
         if k[0:5] == "birth":
@@ -254,13 +254,13 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
         }
     }
     for key, value in birthdays.items():
-        # 获取距离下次生日的时间
+        # 鑾峰彇璺濈涓嬫鐢熸棩鐨勬椂闂?
         birth_day = get_birthday(value["birthday"], year, today)
         if birth_day == 0:
-            birthday_data = "今天{}生日哦，祝{}生日快乐！".format(value["name"], value["name"])
+            birthday_data = "浠婂ぉ{}鐢熸棩鍝︼紝绁漿}鐢熸棩蹇箰锛?".format(value["name"], value["name"])
         else:
-            birthday_data = "距离{}的生日还有{}天".format(value["name"], birth_day)
-        # 将生日数据插入data
+            birthday_data = "璺濈{}鐨勭敓鏃ヨ繕鏈墈}澶?".format(value["name"], birth_day)
+        # 灏嗙敓鏃ユ暟鎹彃鍏ata
         data["data"][key] = {"value": birthday_data, "color": get_color()}
     headers = {
         'Content-Type': 'application/json',
@@ -269,13 +269,13 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     }
     response = post(url, headers=headers, json=data).json()
     if response["errcode"] == 40037:
-        print("推送消息失败，请检查模板id是否正确")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ユā鏉縤d鏄惁姝ｇ‘")
     elif response["errcode"] == 40036:
-        print("推送消息失败，请检查模板id是否为空")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ユā鏉縤d鏄惁涓虹┖")
     elif response["errcode"] == 40003:
-        print("推送消息失败，请检查微信号是否正确")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ュ井淇″彿鏄惁姝ｇ‘")
     elif response["errcode"] == 0:
-        print("推送消息成功")
+        print("鎺ㄩ?佹秷鎭垚鍔?")
     else:
         print(response)
 
@@ -285,23 +285,29 @@ if __name__ == "__main__":
         with open("config.txt", encoding="utf-8") as f:
             config = eval(f.read())
     except FileNotFoundError:
-        print("推送消息失败，请检查config.txt文件是否与程序位于同一路径")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌onfig.txt鏂囦欢鏄惁涓庣▼搴忎綅浜庡悓涓?璺緞")
         os.system("pause")
         sys.exit(1)
     except SyntaxError:
-        print("推送消息失败，请检查配置文件格式是否正确")
+        print("鎺ㄩ?佹秷鎭け璐ワ紝璇锋鏌ラ厤缃枃浠舵牸寮忔槸鍚︽纭?")
         os.system("pause")
         sys.exit(1)
 
-    # 获取accessToken
+    # 鑾峰彇accessToken
     accessToken = get_access_token()
-    # 接收的用户
+    # 鎺ユ敹鐨勭敤鎴?
     users = config["user"]
-    # 传入地区获取天气信息
+    # 浼犲叆鍦板尯鑾峰彇澶╂皵淇℃伅
     region = config["region"]
     weather, temp, max_temp, min_temp, wind_dir, sunrise, sunset, category, pm2p5, proposal = get_weather(region)
+    note_ch = config["note_ch"]
+    note_en = config["note_en"]
+    if note_ch == "" and note_en == "":
+        # 鑾峰彇璇嶉湼姣忔棩閲戝彞
+        note_ch, note_en = get_ciba()
     chp = get_tianhang()
-    # 公众号推送消息
+    # 鍏紬鍙锋帹閫佹秷鎭?
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir, max_temp, min_temp, sunrise,sunset,category,pm2p5,proposal,chp )
+        send_message(user, accessToken, region, weather, temp, wind_dir, note_ch, note_en, max_temp, min_temp, sunrise,
+                     sunset, category, pm2p5, proposal, chp)
     os.system("pause")
