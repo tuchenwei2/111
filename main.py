@@ -302,7 +302,7 @@ if __name__ == "__main__":
     weather, temp, max_temp, min_temp, wind_dir, sunrise, sunset, category, pm2p5, proposal = get_weather(region)
 
     note_en = config["note_en"]
-    if note_ch == "你今天看起来很漂亮" and note_en == "You look beautiful today":
+    if note_ch == "You look beautiful today" and note_en == "You look beautiful today":
         # 获取词霸每日金句
         note_ch, note_en = get_ciba()
     chp = get_tianhang()
