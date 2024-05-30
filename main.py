@@ -300,8 +300,6 @@ if __name__ == "__main__":
     # 传入地区获取天气信息
     region = config["region"]
     weather, temp, max_temp, min_temp, wind_dir, sunrise, sunset, category, pm2p5, proposal = get_weather(region)
-        # 获取词霸每日金句
-        note_ch, note_en = get_ciba()
     chp = get_tianhang()
     # 公众号推送消息
     for user in users:
